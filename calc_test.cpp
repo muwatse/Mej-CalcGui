@@ -60,32 +60,14 @@ TStatus::ETestStatus RTSManager::DoAnd(DynamicArray<String> &params)
 
             if (numBytes > 0)
             {
-                const bool isHex =
-                    Pos(Script_Constants::sHexFormat, params[3].UpperCase()) > 0;
-
-                // Read both operands, one byte at a time
+                // The buffer holds raw bytes (see DoSetConstant), so read directly
                 for (int i = 0; i < numBytes; i++)
                 {
-                    if (isHex)
-                    {
-                        parm1.uc[i] =
-                            (uint8_t)HexStringToUnsignedInt(
-                                RTSForm->GetDatabase()->m_ucUUTResults[pos1 + i]);
+                    parm1.uc[i] =
+                        RTSForm->GetDatabase()->m_ucUUTResults[pos1 + i];
 
-                        parm2.uc[i] =
-                            (uint8_t)HexStringToUnsignedInt(
-                                RTSForm->GetDatabase()->m_ucUUTResults[pos2 + i]);
-                    }
-                    else
-                    {
-                        parm1.uc[i] =
-                            (uint8_t)StrToInt(
-                                RTSForm->GetDatabase()->m_ucUUTResults[pos1 + i]);
-
-                        parm2.uc[i] =
-                            (uint8_t)StrToInt(
-                                RTSForm->GetDatabase()->m_ucUUTResults[pos2 + i]);
-                    }
+                    parm2.uc[i] =
+                        RTSForm->GetDatabase()->m_ucUUTResults[pos2 + i];
                 }
 
                 // Unused upper bytes are zero, so one 32-bit AND covers
